@@ -1,10 +1,12 @@
 package com.xman.coolweather.fragment;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.ProviderInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.text.LoginFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,10 +19,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xman.coolweather.MainActivity;
 import com.xman.coolweather.R;
+import com.xman.coolweather.WeatherActivity;
 import com.xman.coolweather.db.City;
 import com.xman.coolweather.db.Country;
 import com.xman.coolweather.db.Province;
+import com.xman.coolweather.gson.Weather;
 import com.xman.coolweather.util.Constants;
 import com.xman.coolweather.util.HttpUtil;
 import com.xman.coolweather.util.Utility;
@@ -93,6 +98,21 @@ public class ChooseAreaFragment extends Fragment {
                 } else if (currentLevel == LEVEL_CITY) {
                     selectedCity = cityList.get(position);
                     queryCountries();
+                }else if (currentLevel == LEVEL_COUNTRY){
+                    if (getActivity() instanceof MainActivity){
+
+                        Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                        intent.putExtra("weather_id",countryList.get(position).getWeatherId());
+                        startActivity(intent);
+                        getActivity().finish();
+
+                    }else if(getActivity() instanceof WeatherActivity){
+                        WeatherActivity activity = (WeatherActivity) getActivity();
+                        activity.mDrawerLayout.closeDrawer(GravityCompat.START);
+                        activity.refreshLayout.setRefreshing(true);
+                        activity.weatherId = countryList.get(position).getWeatherId();
+                        activity.requestWeather(activity.weatherId);
+                    }
                 }
             }
         });

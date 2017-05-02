@@ -6,7 +6,7 @@ import org.litepal.crud.DataSupport;
  * Created by xman on 2017/4/6.
  */
 
-public class Province extends DataSupport{
+public class Province extends DataSupport {
 
     private int id;
     private String provinceName;
